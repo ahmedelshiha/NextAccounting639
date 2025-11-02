@@ -2,7 +2,7 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import RolePermissionsViewer from '@/components/admin/permissions/RolePermissionsViewer'
 import UserPermissionsInspector from '@/components/admin/permissions/UserPermissionsInspector'
-import UnifiedPermissionModal, { RoleFormData } from '@/components/admin/permissions/UnifiedPermissionModal'
+import UnifiedPermissionModal, { RoleFormData, PermissionChangeSet } from '@/components/admin/permissions/UnifiedPermissionModal'
 import { Button } from '@/components/ui/button'
 import { Plus, Edit3, Trash2, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
