@@ -55,87 +55,56 @@ export const ClientFormModal = React.forwardRef<HTMLDivElement, ClientFormModalP
     title,
     description,
   }, ref) {
-    const [isSubmitting, setIsSubmitting] = useState(false)
-    const [error, setError] = useState<string | null>(null)
-    const [formData, setFormData] = useState<ClientFormData>({
-      name: initialData?.name || '',
-      email: initialData?.email || '',
-      phone: initialData?.phone || '',
-      company: initialData?.company || '',
-      tier: initialData?.tier || 'INDIVIDUAL',
-      status: initialData?.status || 'ACTIVE',
-      address: initialData?.address || '',
-      city: initialData?.city || '',
-      country: initialData?.country || '',
-      notes: initialData?.notes || '',
-    })
-
     const defaultTitle = mode === 'create' ? 'Create New Client' : 'Edit Client'
     const defaultDescription = mode === 'create'
       ? 'Add a new client to your system'
       : 'Update client information'
 
-    const handleChange = useCallback((field: keyof ClientFormData, value: string) => {
-      setFormData(prev => ({ ...prev, [field]: value }))
-      setError(null)
-    }, [])
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-    const validateForm = (): boolean => {
-      if (!formData.name.trim()) {
-        setError('Client name is required')
-        return false
-      }
-      if (!formData.email.trim()) {
-        setError('Email is required')
-        return false
-      }
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-      if (!emailRegex.test(formData.email)) {
-        setError('Invalid email format')
-        return false
-      }
-      return true
+    const validation: FieldValidation = {
+      name: { validate: (v) => !!v?.trim(), message: 'Client name is required' },
+      email: [
+        { validate: (v) => !!v?.trim(), message: 'Email is required' },
+        { validate: (v) => emailRegex.test(v), message: 'Invalid email format' },
+      ],
     }
 
-    const handleSubmit = useCallback(async (e: React.FormEvent) => {
-      e.preventDefault()
-      
-      if (!validateForm()) return
-
-      setIsSubmitting(true)
-      try {
-        const endpoint = mode === 'create'
-          ? '/api/admin/entities/clients'
-          : `/api/admin/entities/clients/${initialData?.id}`
-        const method = mode === 'create' ? 'POST' : 'PATCH'
-
-        const response = await fetch(endpoint, {
-          method,
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData),
-        })
-
-        if (!response.ok) {
-          const errorData = await response.json()
-          throw new Error(errorData.message || `Failed to ${mode === 'create' ? 'create' : 'update'} client`)
-        }
-
-        const result = await response.json()
-        toast.success(
-          mode === 'create'
-            ? 'Client created successfully'
-            : 'Client updated successfully'
-        )
-        onSuccess?.(result.id)
+    const formConfig: EntityFormConfig = {
+      endpoint: (mode, id) =>
+        mode === 'create' ? '/api/admin/entities/clients' : `/api/admin/entities/clients/${id}`,
+      method: (mode) => (mode === 'create' ? 'POST' : 'PATCH'),
+      successMessage: (mode) =>
+        mode === 'create' ? 'Client created successfully' : 'Client updated successfully',
+      onSuccess: (id) => {
+        onSuccess?.(id)
         onClose()
-      } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : 'An error occurred'
-        setError(errorMessage)
-        toast.error(errorMessage)
-      } finally {
-        setIsSubmitting(false)
-      }
-    }, [formData, mode, initialData?.id, onClose, onSuccess])
+      },
+    }
+
+    const form = useEntityForm<ClientFormData>({
+      initialData: {
+        name: initialData?.name || '',
+        email: initialData?.email || '',
+        phone: initialData?.phone || '',
+        company: initialData?.company || '',
+        tier: initialData?.tier || 'INDIVIDUAL',
+        status: initialData?.status || 'ACTIVE',
+        address: initialData?.address || '',
+        city: initialData?.city || '',
+        country: initialData?.country || '',
+        notes: initialData?.notes || '',
+      },
+      validation,
+      config: formConfig,
+      entityId: initialData?.id,
+      mode: mode,
+    })
+
+    const handleSubmit = (e: React.FormEvent) => {
+      e.preventDefault()
+      form.submit()
+    }
 
     return (
       <Dialog open={isOpen} onOpenChange={onClose}>
