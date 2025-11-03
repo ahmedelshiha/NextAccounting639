@@ -53,8 +53,19 @@ export function useFilterBuilder({
       const newGroups = config.groups.filter((g) => g.id !== groupId)
       if (newGroups.length === 0) {
         // Keep at least one empty group
-        const { createEmptyFilterGroup } = require('../types/filters')
-        newGroups.push(createEmptyFilterGroup())
+        const newGroup: FilterGroup = {
+          id: `group-${Date.now()}`,
+          conditions: [
+            {
+              id: `condition-${Date.now()}`,
+              field: '',
+              operator: 'eq',
+              value: '',
+            },
+          ],
+          logic: 'AND',
+        }
+        newGroups.push(newGroup)
       }
       setConfig({
         ...config,
@@ -65,10 +76,21 @@ export function useFilterBuilder({
   )
 
   const addGroup = useCallback(() => {
-    const { createEmptyFilterGroup } = require('../types/filters')
+    const newGroup: FilterGroup = {
+      id: `group-${Date.now()}`,
+      conditions: [
+        {
+          id: `condition-${Date.now()}`,
+          field: '',
+          operator: 'eq',
+          value: '',
+        },
+      ],
+      logic: 'AND',
+    }
     setConfig({
       ...config,
-      groups: [...config.groups, createEmptyFilterGroup()],
+      groups: [...config.groups, newGroup],
     })
   }, [config, setConfig])
 
