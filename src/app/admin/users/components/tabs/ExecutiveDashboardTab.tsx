@@ -70,6 +70,7 @@ export function ExecutiveDashboardTab({
   const [bulkActionType, setBulkActionType] = useState<string>('')
   const [bulkActionValue, setBulkActionValue] = useState<string>('')
   const [isApplyingBulkAction, setIsApplyingBulkAction] = useState(false)
+  const [activeSavedView, setActiveSavedView] = useState<string>('all')
 
   const handleRefreshDashboard = () => {
     onRefresh?.()
