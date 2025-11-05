@@ -62,7 +62,7 @@ export const WorkstationSidebar = memo(function WorkstationSidebar({
    * Map filters from WorkstationIntegrated format to AdvancedUserFilters format
    * Ensures safe extraction of all filter values with proper typing
    */
-  const mappedFilters: AUserFilters = useMemo(() => {
+  const mappedFilters: UserFilters = useMemo(() => {
     const dateRangeStr = getFilterValue(filters?.dateRange)
     return {
       search: getFilterValue(filters?.search) || '',
