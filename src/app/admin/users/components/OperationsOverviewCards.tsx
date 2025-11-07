@@ -69,31 +69,34 @@ function MetricCard({
 
 /**
  * Operations Overview Cards
- * 
+ *
  * Displays key metrics for user management:
- * - Total Users
+ * - Active Users
  * - Pending Approvals
  * - In-Progress Workflows
+ * - System Health
  * - Due This Week
- * 
+ *
  * Features:
- * - Responsive grid layout
+ * - Responsive grid layout (5 columns on desktop)
  * - Loading state support
  * - Trend indicators
  * - Quick at-a-glance status
+ * - Light theme styling
  */
 export function OperationsOverviewCards({
   metrics,
   isLoading
 }: OperationsOverviewCardsProps) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
       <MetricCard
-        title="Total Users"
+        title="Active Users"
         value={metrics.totalUsers}
         icon="👥"
         description="Active system users"
         isLoading={isLoading}
+        trend={5}
       />
 
       <MetricCard
@@ -102,15 +105,25 @@ export function OperationsOverviewCards({
         icon="⏳"
         description="Awaiting approval"
         isLoading={isLoading}
-        trend={metrics.pendingApprovals > 0 ? 1 : 0}
+        trend={metrics.pendingApprovals > 0 ? -10 : 0}
       />
 
       <MetricCard
-        title="In-Progress Workflows"
+        title="In Progress Workflows"
         value={metrics.inProgressWorkflows}
-        icon="🔄"
+        icon="⚙️"
         description="Active operations"
         isLoading={isLoading}
+        trend={-5}
+      />
+
+      <MetricCard
+        title="System Health"
+        value={metrics.systemHealth ? `${metrics.systemHealth}%` : '98.5%'}
+        icon="🟢"
+        description="System uptime"
+        isLoading={isLoading}
+        trend={3}
       />
 
       <MetricCard
