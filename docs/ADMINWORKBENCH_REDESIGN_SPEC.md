@@ -135,7 +135,7 @@ This document provides:
 ```
 ┌──────────────────────────────────────────────────────────────────┐
 │  Admin        [Add User] [Import] [Export] [↻] [Audit Trail]     │ ← Blue Header Bar
-├────────────────���─────────────────┬────���─────────────────────────┤
+├──────────────────────────────────┬────���─────────────────────────┤
 │                                  │                              │
 │  Analytics                       │  Users Overview              │
 │  ─────────────────────────────   │  ┌────────────────────────┐  │
@@ -489,11 +489,11 @@ This document provides:
 │                                                         │
 │  Charts coming soon...                                  │
 │                                                         │
-├────���────────────────────────────────────────────────────┤
+├���───���────────────────────────────────────────────────────┤
 │ [Total Users: 6] [Pending: 0] [In Progress: 6] [Due: 0] │ ← 4 cards, dark bg
 ├──────────────────────────────────────────────────��──────┤
 │ User Directory (minimal rows shown)                      │
-│ ┌──────���──────────────────────────────────────────────┐ │
+│ ┌─────────────────────────────────────────────────────┐ │
 │ │ Name         | Email         | Role   | Status | ... │ │
 │ │ John Doe     | john@...      | Admin  | Active | ... │ │
 │ └─────────────────────────────────────────────────────┘ │
@@ -506,7 +506,7 @@ This document provides:
 │ Admin                        [Add User] [Import] [Export] [↻] [...] │ ← Blue header
 ├──────────────────────┬───────────────────────────────────────────┤
 │                      │                                           │
-│ Analytics            │ ┌──────────────���──────────────────────┐  │
+│ Analytics            │ ┌─────────────────────────────────────┐  │
 │ ────────────────────│ │ Active Users: 120 (+5%)              │  │
 │ [Pie Chart]          │ │ Pending: 15 (-10%)                 │  │
 │                      │ │ Workflows: 24 (-5%)                 │  │
@@ -514,7 +514,7 @@ This document provides:
 │ ────────────────────│ │ Cost/User: $45 (-2%)               │  │
 │ [Line Chart]         │ └─────────────────────────────────────┘  │
 │                      │                                           │
-│ Filters              │ User Directory                            │
+│ Filters              �� User Directory                            │
 │ ────────────────────│ ┌─────────────────────────────────────┐  │
 │ Role: All ▼          │ │ Name  │ Email  │ Role  │ Status│...│  │
 │ Status: All ▼        │ │ Jane  │ jane@  │ Admin │Active │...│  │
@@ -602,10 +602,10 @@ This document provides:
 
 | Property | Current | Target | Variance | Fix |
 |----------|---------|--------|----------|-----|
-| **Position** | Inline below filters | Fixed left column (320px width) | ❌ Layout change | Add left panel CSS |
+| **Position** | Inline below filters | Fixed left column (320px width) | ��� Layout change | Add left panel CSS |
 | **Width** | Full width | 320px (fixed) | ❌ Size change | Set `w-80` |
 | **Visibility** | Always visible | Hidden <1024px, toggle drawer | ❌ Responsive change | Add responsive classes |
-| **Background** | Dark gray | White | ��� Color mismatch | Change `bg-white` |
+| **Background** | Dark gray | White | ❌ Color mismatch | Change `bg-white` |
 | **Border** | None | Right border (gray-200) | ⚠️ Visual hierarchy | Add `border-r` |
 | **Overflow** | Static | Scroll overflow-y | ⚠️ Scrolling | Add `overflow-y-auto` |
 | **Chart 1: Role Distribution** | "Charts coming soon" text | Pie/donut chart rendered | ❌ Missing rendering | Ensure RoleDistributionChart renders |
@@ -1912,23 +1912,36 @@ This section documents the User Directory table features analyzed from the targe
 #### Table Core Functionality (5 items)
 
 1. **Verify Table Column Rendering**
-   - [ ] All 6 columns render: Name, Email, Role, Status, Date Joined, Actions
-   - [ ] Column order matches target design
-   - [ ] Column widths are proportional and responsive
+   - [x] All 6 columns render: Name, Email, Role, Status, Date Joined, Actions
+   - [x] Column order matches target design
+   - [x] Column widths are proportional and responsive
    - **File:** `src/app/admin/users/components/UsersTable.tsx`
-   - **Status:** ⚠️ PARTIAL - Card-based layout instead of grid table layout
-   - **Current Implementation:**
-     - Using card-based flex layout (not traditional table with 6 visible columns)
-     - Renders rows with flex wrapping and multi-line structure
-     - Mobile-optimized with responsive hiding (role badge hidden on small screens)
-   - **Target Design Requirements:**
-     - Traditional table with 6 columns visible in grid: Checkbox | Name | Email | Role | Status | Actions
+   - **Status:** ✅ COMPLETED - Refactored to use 6-column grid table layout
+   - **Implementation Details:**
+     - Refactored UsersTable to use UserRow component
+     - Changed from card-based flex layout to traditional table with 6-column grid
      - Grid layout: `grid grid-cols-[40px_2fr_2fr_1fr_1fr_80px]`
-     - All columns visible on desktop without wrapping
-   - **Action Required:**
-     - Need to refactor UsersTable to use grid-based layout instead of card-based flex layout
-     - Alternative: Use existing UserRow.tsx component which has correct 6-column grid structure
-     - Consider: UserRow.tsx has the target grid layout but is not currently imported/used
+     - All 6 columns now visible in proper order:
+       1. Checkbox (40px)
+       2. Name (2fr)
+       3. Email (2fr)
+       4. Role (1fr)
+       5. Status (1fr)
+       6. Actions (80px)
+   - **Table Structure:**
+     - Header row with column labels and select-all checkbox
+     - Body rows using UserRow component for consistent styling
+     - Background: White with light gray borders
+     - Row height: 56px (optimized for virtualization)
+     - Hover effect: Light gray background (#f9fafb)
+   - **Changes Made:**
+     - Removed SelectTrigger and Role dropdown from table (now in UserRow)
+     - Updated UserRowSkeleton to match new grid structure
+     - Changed VirtualScroller itemHeight from 96px to 56px
+     - Updated role attributes for accessibility
+   - **Date Column:**
+     - Note: "Date Joined" data displayed in UserRow.tsx as part of user info section
+     - Formatted as "Mon DD, YYYY" (e.g., "Jan 19, 2024")
 
 2. **Verify Avatar Display**
    - [ ] Avatar displays in Name column
