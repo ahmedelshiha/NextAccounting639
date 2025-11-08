@@ -47,6 +47,7 @@ export default function AdminUsersLayout() {
   const [filters, setFilters] = useState<Record<string, any>>({})
   const [showImportWizard, setShowImportWizard] = useState(false)
   const [showCreateUserModal, setShowCreateUserModal] = useState(false)
+  const [isRefreshing, setIsRefreshing] = useState(false)
   const isBuilderEnabled = useIsBuilderEnabled()
   const context = useUsersContext()
 
