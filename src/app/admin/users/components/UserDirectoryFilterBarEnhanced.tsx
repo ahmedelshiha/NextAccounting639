@@ -222,6 +222,26 @@ export function UserDirectoryFilterBarEnhanced({
           ariaLabel="Filter by status (multi-select)"
         />
 
+        {/* Presets Button */}
+        {showPresets && presetsLoaded && (
+          <Button
+            onClick={() => setPresetsOpen(!presetsOpen)}
+            variant={presetsOpen ? 'default' : 'outline'}
+            size="sm"
+            className="text-xs"
+            aria-label="Manage filter presets"
+            title="Save and load filter presets"
+          >
+            <Bookmark className="w-3 h-3 mr-1" />
+            Presets
+            {presets.length > 0 && (
+              <span className="ml-1.5 inline-flex items-center px-1.5 py-0 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">
+                {presets.length}
+              </span>
+            )}
+          </Button>
+        )}
+
         {/* Export Button */}
         {showExport && (
           <ExportButton
