@@ -118,7 +118,7 @@ export default function AdminSidebar({
       </div>
 
       {/* Sidebar content */}
-      <div className="admin-sidebar-content">
+      <div className={`admin-sidebar-content ${isCollapsed ? 'hidden' : ''}`}>
         {/* Analytics Section */}
         <Collapsible open={expandedSections.analytics}>
           <CollapsibleTrigger
