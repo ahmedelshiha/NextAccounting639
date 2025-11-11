@@ -21,10 +21,11 @@ interface AdminSidebarProps {
  * Left sidebar with analytics and widgets
  *
  * Features:
- * - Collapsible analytics sections
+ * - Collapsible analytics sections with proper width transitions
  * - Analytics widgets (charts, stats)
  * - Recent activity list
  * - Responsive drawer on mobile/tablet
+ * - Proper layout expansion when sidebar collapses
  *
  * Note: Filters have been moved to the main filter bar in the header
  */
@@ -34,7 +35,7 @@ export default function AdminSidebar({
   const context = useUsersContext()
   const [expandedSections, setExpandedSections] = useState({
     analytics: true,
-    activity: false
+    activity: true
   })
   const [isCollapsed, setIsCollapsed] = useState(false)
 
