@@ -54,7 +54,6 @@ const STATUS_KEYWORDS: Record<string, string> = {
   'online': 'ACTIVE',
   'inactive': 'INACTIVE',
   'disabled': 'INACTIVE',
-  'disabled': 'INACTIVE',
   'offline': 'INACTIVE',
   'unavailable': 'INACTIVE',
   'away': 'INACTIVE',
