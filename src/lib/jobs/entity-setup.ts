@@ -326,7 +326,7 @@ export async function publishEvent(
  */
 export async function enqueueVerificationJob(entityId: string): Promise<void> {
   try {
-    await redis.rpush(JOB_QUEUE, JSON.stringify({ entityId }));
+    await (redis as any).rpush(JOB_QUEUE, JSON.stringify({ entityId }));
     logger.info("Verification job enqueued", { entityId });
   } catch (error) {
     logger.error("Failed to enqueue verification job", { entityId, error });
