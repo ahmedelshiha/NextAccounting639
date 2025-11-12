@@ -105,6 +105,7 @@ model User {
   consentsAccepted          Consent[]
   verificationAttempts      VerificationAttempt[] @relation("VerificationAttemptBy")
   entityAuditLogs           EntityAuditLog[]
+  documentVersions          DocumentVersion[]     @relation("DocumentVersionUploader")
 
   @@unique([tenantId, email])
   @@index([tenantId, role])
