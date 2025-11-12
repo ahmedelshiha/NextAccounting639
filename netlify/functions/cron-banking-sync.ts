@@ -1,7 +1,7 @@
 import { Handler, HandlerEvent } from '@netlify/functions'
 import prisma from '@/lib/prisma'
 import { logger } from '@/lib/logger'
-import { BankingProviderFactory } from '@/lib/banking/adapters'
+import { createBankingProvider } from '@/lib/banking/adapters'
 
 interface SyncStats {
   connectionsProcessed: number
