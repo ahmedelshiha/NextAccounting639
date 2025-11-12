@@ -153,10 +153,10 @@ CREATE TABLE IF NOT EXISTS "consents" (
   "metadata" JSONB,
   "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-  CONSTRAINT "consents_tenantId_fkey" FOREIGN KEY ("tenantId") REFERENCES "Tenant"("id") ON DELETE CASCADE,
+  CONSTRAINT "consents_tenantId_fkey" FOREIGN KEY ("tenantId") REFERENCES "tenants"("id") ON DELETE CASCADE,
   CONSTRAINT "consents_entityId_fkey" FOREIGN KEY ("entityId") REFERENCES "entities"("id") ON DELETE SET NULL,
-  CONSTRAINT "consents_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL,
-  CONSTRAINT "consents_acceptedBy_fkey" FOREIGN KEY ("acceptedBy") REFERENCES "User"("id")
+  CONSTRAINT "consents_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE SET NULL,
+  CONSTRAINT "consents_acceptedBy_fkey" FOREIGN KEY ("acceptedBy") REFERENCES "users"("id")
 );
 
 CREATE INDEX "consents_tenantId_idx" ON "consents"("tenantId");
