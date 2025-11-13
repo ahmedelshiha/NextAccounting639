@@ -59,35 +59,39 @@ interface EditUserFormProps extends BaseUserFormProps {
 type UserFormProps = CreateUserFormProps | EditUserFormProps
 
 export const UserForm = React.forwardRef<HTMLFormElement, UserFormProps>(
-  function UserForm({
-    mode = 'create',
-    initialData,
-    onSubmit,
-    onCancel,
-    isLoading = false,
-    showPasswordGeneration = true,
-  }, ref) {
+  function UserForm(props, ref) {
+    const { mode, onSubmit, onCancel, isLoading = false, showPasswordGeneration = true } = props as any
+    const initialData = 'initialData' in props ? props.initialData : undefined
+
     const [tempPassword, setTempPassword] = useState<string | null>(
-      initialData?.temporaryPassword || null
+      mode === 'edit' && initialData?.temporaryPassword ? initialData.temporaryPassword : null
     )
     const [isSubmitting, setIsSubmitting] = useState(false)
 
     // Type-safe schema selection based on mode
-    const schema = mode === 'create' ? UserCreateSchema : UserEditSchema
+    const schema = useMemo(() => (mode === 'create' ? UserCreateSchema : UserEditSchema), [mode])
+
+    // Use proper form with generic type
+    const formMethods = useForm<UserCreate | UserEdit>({
+      resolver: zodResolver(schema),
+      defaultValues: useMemo(
+        () => ({
+          ...(initialData || {}),
+          role: initialData?.role || 'CLIENT',
+          isActive: initialData?.isActive ?? true,
+          requiresOnboarding: mode === 'create' ? true : initialData?.requiresOnboarding ?? false,
+        }),
+        [initialData, mode]
+      ),
+    })
+
     const {
       register,
       handleSubmit,
       watch,
       setValue,
       formState: { errors },
-    } = useForm<UserCreate | UserEdit>({
-      resolver: zodResolver(schema),
-      defaultValues: (initialData || {
-        role: 'CLIENT',
-        isActive: true,
-        requiresOnboarding: mode === 'create',
-      }) as any, // Safe here since we're setting defaults for both schemas
-    })
+    } = formMethods
 
     const role = watch('role')
     const isActive = watch('isActive')
