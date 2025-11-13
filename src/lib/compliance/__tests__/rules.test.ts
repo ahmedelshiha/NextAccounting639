@@ -80,9 +80,9 @@ describe('Compliance Rules Engine', () => {
 
   describe('ESR (Economic Substance Requirement)', () => {
     it('should require ESR only for UAE companies', () => {
-      const uaeCompany = mockEntity({ country: 'AE', type: 'company' });
-      const uaeIndividual = mockEntity({ country: 'AE', type: 'individual' });
-      const ksaCompany = mockEntity({ country: 'SA', type: 'company' });
+      const uaeCompany = mockEntity({ country: 'AE', metadata: { entityType: 'company' } });
+      const uaeIndividual = mockEntity({ country: 'AE', metadata: { entityType: 'individual' } });
+      const ksaCompany = mockEntity({ country: 'SA', metadata: { entityType: 'company' } });
 
       expect(isESRRequired(uaeCompany)).toBe(true);
       expect(isESRRequired(uaeIndividual)).toBe(false);
